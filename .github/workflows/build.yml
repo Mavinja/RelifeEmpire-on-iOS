@@ -1,0 +1,33 @@
+name: Build iOS Dylib
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Compile dylib for iOS
+      run: |
+        xcrun --sdk iphoneos clang++ \
+          -arch arm64 \
+          -dynamiclib \
+          -fobjc-arc \
+          -framework Foundation \
+          -framework UIKit \
+          -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
+          -miphoneos-version-min=12.0 \
+          Main.m \
+          -o libsinum.dylib
+
+    - name: Upload Dylib Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: libsinum-dylib
+        path: libsinum.dylib
