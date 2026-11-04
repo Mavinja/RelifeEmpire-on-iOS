@@ -1,3 +1,10 @@
+name: Build iOS Dylib
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: macos-latest
